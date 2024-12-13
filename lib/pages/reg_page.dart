@@ -17,30 +17,26 @@ class _RegPageState extends State<RegPage> {
   TextEditingController _password = TextEditingController();
   TextEditingController _repeatPassword = TextEditingController();
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
-  Future<void> _signIn() async {
-    if (_email.text.isEmpty || _password.text.isEmpty){
+  final _formKey = GlobalKey<FormState>();
+
+  Future<void> _signUp() async {
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) {
       return;
     }
-    setState(() {
-      _isLoading = true;
-    });
+    final email = _email.text;
+    final password = _password.text;
+    final username = _username.text;
     try {
-      await supabase.auth.signInWithPassword(
-        email: _email.text,
-        password: _password.text,
-      );
+      await supabase.auth.signUp(
+          email: email, password: password, data: {'username': username});
       context.go('/Home');
     } on AuthException catch (error) {
       context.showErrorSnackBar(message: error.message);
-    } catch (_) {
-      context.showErrorSnackBar(message: _.toString());
-    }
-    if (mounted) {
-      setState(() {
-        _isLoading = true;
-      });
+    } catch (error) {
+      context.showErrorSnackBar(message: error.toString());
     }
   }
 
@@ -51,6 +47,7 @@ class _RegPageState extends State<RegPage> {
       home: Scaffold(
         appBar: AppBar(),
         body: Padding(
+          key: _formKey,
           padding: formPadding,
           child: Column(
             children: [
@@ -82,7 +79,7 @@ class _RegPageState extends State<RegPage> {
                         FinanceTextField(controller: _repeatPassword, hintText: 'Повторите пароль', fontSize: 20),
                         formSpacer,
                         ElevatedButton(
-                          onPressed: _isLoading ? null : _signIn,
+                          onPressed: _isLoading ? null : _signUp,
                           child: Text('Зарегистрироваться', style: TextStyle(fontSize: 22),),
                         ),
                         formSpacer,

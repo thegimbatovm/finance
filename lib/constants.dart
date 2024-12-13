@@ -17,6 +17,22 @@ const formColor = Color.fromRGBO(230, 230, 240, 1);
 
 const authRegColor = Color.fromRGBO(145, 113, 210, 1);
 
+final appHomeTheme = ThemeData.light().copyWith(
+    primaryColor: authRegColor,
+    appBarTheme: AppBarTheme(
+        backgroundColor: formColor
+    ),
+    scaffoldBackgroundColor: formColor,
+    hintColor: Colors.grey,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+        style: TextButton.styleFrom(
+            backgroundColor: authRegColor,
+            foregroundColor: Colors.white,
+            minimumSize: Size(double.infinity, 50)
+        )
+    )
+);
+
 final appTheme = ThemeData.light().copyWith(
   primaryColor: authRegColor,
   appBarTheme: AppBarTheme(
@@ -63,6 +79,12 @@ class FinanceTextField extends StatelessWidget{
     return TextFormField(
       controller: controller,
       cursorColor: authRegColor,
+      validator: (val){
+        if (val == null || val.isEmpty) {
+          return 'Required';
+        }
+        return null;
+      },
       style: TextStyle(
         fontSize: fontSize,
         color: authRegColor,

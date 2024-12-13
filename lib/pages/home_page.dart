@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: appHomeTheme,
       home: Scaffold(
         body: Center(
           child: TextButton(
