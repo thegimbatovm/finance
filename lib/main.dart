@@ -1,4 +1,5 @@
 import 'package:finance/constants.dart';
+import 'package:finance/pages/Reg_page.dart';
 import 'package:finance/pages/auth_page.dart';
 import 'package:finance/pages/home_page.dart';
 import 'package:finance/pages/splash_page.dart';
@@ -29,6 +30,20 @@ final GoRouter _router = GoRouter(
           builder: (BuildContext context, GoRouterState state) {
             return const AuthPage();
           },
+          routes: <RouteBase> [
+            GoRoute(
+                path: 'Reg',
+              builder: (BuildContext context, GoRouterState state) {
+                  return const RegPage();
+              }
+            ),
+            GoRoute(
+                path: 'Home',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const HomePage();
+                }
+            ),
+          ]
         ),
         GoRoute(
           path: 'Home',

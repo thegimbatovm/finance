@@ -9,12 +9,28 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const preloader = Center(child: CircularProgressIndicator(color: Colors.orange,),);
 
-const formSpacer = SizedBox(width: 16, height: 16,);
+const formSpacer = SizedBox(width: 16, height: 26,);
 
 const formPadding = EdgeInsets.symmetric(vertical: 20, horizontal: 20);
 
-final appTheme = ThemeData.light().copyWith(
+const formColor = Color.fromRGBO(230, 230, 240, 1);
 
+const authRegColor = Color.fromRGBO(145, 113, 210, 1);
+
+final appTheme = ThemeData.light().copyWith(
+  primaryColor: authRegColor,
+  appBarTheme: AppBarTheme(
+    backgroundColor: formColor
+  ),
+  scaffoldBackgroundColor: formColor,
+  hintColor: Colors.grey,
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: TextButton.styleFrom(
+      backgroundColor: authRegColor,
+      foregroundColor: Colors.white,
+      minimumSize: Size(double.infinity, 50)
+    )
+  )
 );
 
 extension ShowSnackBar on BuildContext{
@@ -33,3 +49,40 @@ extension ShowSnackBar on BuildContext{
     showSnackBar(message: message, backgroundColor: Colors.red);
   }
 }
+
+class FinanceTextField extends StatelessWidget{
+
+  final TextEditingController controller;
+  final String hintText;
+  final double fontSize;
+
+  const FinanceTextField({super.key, required this.controller, required this.hintText, required this.fontSize,});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      cursorColor: authRegColor,
+      style: TextStyle(
+        fontSize: fontSize,
+        color: authRegColor,
+      ),
+      decoration: InputDecoration(
+        hintText: hintText,
+          filled: false,
+          fillColor: authRegColor,
+      ),
+      onTapOutside: (PointerDownEvent event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+    );
+  }
+}
+
+
+
+
+
+
+
+
