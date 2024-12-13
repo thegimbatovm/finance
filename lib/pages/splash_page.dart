@@ -22,7 +22,7 @@ class SplashPageState extends State<SplashPage> {
 
     final session = supabase.auth.currentSession;
     if (session == null) {
-      context.go('/reg');
+      context.go('/Auth');
     } else {
       context.go('/Home');
     }

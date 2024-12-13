@@ -1,6 +1,6 @@
 import 'package:finance/constants.dart';
+import 'package:finance/pages/auth_page.dart';
 import 'package:finance/pages/home_page.dart';
-import 'package:finance/pages/register_page.dart';
 import 'package:finance/pages/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -25,9 +25,9 @@ final GoRouter _router = GoRouter(
       },
       routes: <RouteBase>[
         GoRoute(
-          path: 'Reg',
+          path: 'Auth',
           builder: (BuildContext context, GoRouterState state) {
-            return const RegisterPage();
+            return const AuthPage();
           },
         ),
         GoRoute(
