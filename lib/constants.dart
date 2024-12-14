@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
+User? user = supabase.auth.currentUser;
+Map<String, dynamic>? metadata = user?.userMetadata;
+final username = metadata?['username'];
 
 const supabaseUrl = 'https://rcuffkdcapbqkhynffta.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjdWZma2RjYXBicWtoeW5mZnRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzMDY3OTIsImV4cCI6MjA0Nzg4Mjc5Mn0.BCIzTLQ_6Dvni1O18zZzGxDzAPB6C7R9YcZ0duk30OU';
@@ -14,6 +17,8 @@ const formSpacer = SizedBox(width: 16, height: 26,);
 const formPadding = EdgeInsets.symmetric(vertical: 20, horizontal: 20);
 
 const formColor = Color.fromRGBO(230, 230, 240, 1);
+
+const formSize = 14.0;
 
 const authRegColor = Color.fromRGBO(145, 113, 210, 1);
 
@@ -30,7 +35,7 @@ final appHomeTheme = ThemeData.light().copyWith(
             foregroundColor: Colors.white,
             minimumSize: Size(double.infinity, 50)
         )
-    )
+    ),
 );
 
 final appTheme = ThemeData.light().copyWith(
@@ -45,6 +50,11 @@ final appTheme = ThemeData.light().copyWith(
       backgroundColor: authRegColor,
       foregroundColor: Colors.white,
       minimumSize: Size(double.infinity, 50)
+    )
+  ),
+  textTheme: const TextTheme(
+    bodyMedium: TextStyle(
+      fontSize: 20
     )
   )
 );
@@ -100,6 +110,9 @@ class FinanceTextField extends StatelessWidget{
     );
   }
 }
+
+
+
 
 
 

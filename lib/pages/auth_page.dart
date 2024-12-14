@@ -28,6 +28,8 @@ class _AuthPageState extends State<AuthPage> {
         email: _email.text,
         password: _password.text,
       );
+      user = supabase.auth.currentUser;
+      metadata = user?.userMetadata;
       context.go('/Home');
     } on AuthException catch (error) {
       context.showErrorSnackBar(message: error.message);
@@ -57,7 +59,7 @@ class _AuthPageState extends State<AuthPage> {
                       child: Text(
                         'Войти',
                         style: TextStyle(
-                            fontSize: 40,
+                            fontSize: formSize+12,
                             fontWeight: FontWeight.bold,
                           color: appTheme.primaryColor
                         ),
@@ -70,24 +72,24 @@ class _AuthPageState extends State<AuthPage> {
                   padding: formPadding,
                   child: ListView(
                       children: [
-                        FinanceTextField(controller: _email,hintText: 'Email', fontSize: 20,),
+                        FinanceTextField(controller: _email,hintText: 'Email', fontSize: formSize,),
                         formSpacer,
-                        FinanceTextField(controller: _password,hintText: 'Пароль', fontSize: 20,),
+                        FinanceTextField(controller: _password,hintText: 'Пароль', fontSize: formSize,),
                         formSpacer,
                         ElevatedButton(
                             onPressed: _isLoading ? null : _signIn,
-                            child: Text('Войти', style: TextStyle(fontSize: 22),),
+                            child: Text('Войти', style: TextStyle(fontSize: formSize+2),),
                         ),
                         formSpacer,
-                        TextButton(onPressed: (){}, child: Text('Забыли пароль?', style: TextStyle(fontSize: 20, color: Colors.black),)),
+                        TextButton(onPressed: (){}, child: Text('Забыли пароль?', style: TextStyle(fontSize: formSize, color: Colors.black),)),
                         formSpacer,
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Нет аккаунта?', style: TextStyle(fontSize: 20, color: Colors.grey),),
+                            Text('Нет аккаунта?', style: TextStyle(fontSize: formSize, color: Colors.grey),),
                             TextButton(
                                 onPressed: () => context.go('/Auth/Reg'),
-                                child: Text('Регистрация', style: TextStyle(fontSize: 20),)
+                                child: Text('Регистрация', style: TextStyle(fontSize: formSize),)
                             )
                           ],
                         )

@@ -60,7 +60,7 @@ class _SettingNavPageState extends State<SettingNavPage> {
                               maxRadius: 55,
                             ),
                             formSpacer,
-                            Text('Имя пользователя', style: TextStyle(fontSize: 20, color: formColor),)
+                            Text(username, style: TextStyle(fontSize: formSize+2, color: formColor),)
                           ],
                         ),
                       ]
@@ -72,34 +72,46 @@ class _SettingNavPageState extends State<SettingNavPage> {
                       padding: formPadding,
                       child: ListView(
                         children: [
-                          ListTile(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(
-                                color: appHomeTheme.primaryColor
-                              )
+                          InkWell(
+                            onTap: () {},
+                            child: ListTile(
+                              leading: Icon(Icons.co_present, color: appHomeTheme.primaryColor,),
+                              trailing: Icon(Icons.navigate_next, color: appHomeTheme.primaryColor,),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(
+                                  color: appHomeTheme.primaryColor
+                                )
+                              ),
+                              title: Text('Личные данные', style: TextStyle(fontSize: formSize, ),),
                             ),
-                            title: Text('Личные данные', style: TextStyle(fontSize: 20),),
+                          ),
+                          formSpacer,
+                          InkWell(
+                            onTap: () => context.go('/Auth/Home/Category'),
+                            child: ListTile(
+                              leading: Icon(Icons.category, color: appHomeTheme.primaryColor,),
+                              trailing: Icon(Icons.navigate_next, color: appHomeTheme.primaryColor,),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: BorderSide(
+                                      color: appHomeTheme.primaryColor
+                                  )
+                              ),
+                              title: Text('Категории', style: TextStyle(fontSize: formSize, ),),
+                            ),
                           ),
                           formSpacer,
                           ListTile(
+                            leading: Icon(Icons.tune, color: appHomeTheme.primaryColor,),
+                            trailing: Icon(Icons.navigate_next, color: appHomeTheme.primaryColor,),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 side: BorderSide(
                                     color: appHomeTheme.primaryColor
                                 )
                             ),
-                            title: Text('Категории', style: TextStyle(fontSize: 20),),
-                          ),
-                          formSpacer,
-                          ListTile(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: BorderSide(
-                                    color: appHomeTheme.primaryColor
-                                )
-                            ),
-                            title: Text('Настройки', style: TextStyle(fontSize: 20),),
+                            title: Text('Настройки', style: TextStyle(fontSize: formSize),),
                           ),
                         ],
                       ),
@@ -112,7 +124,7 @@ class _SettingNavPageState extends State<SettingNavPage> {
           flex: 1,
           child: Center(
             child: TextButton(
-              child: Text('Выйти', style: TextStyle(color: Colors.red, fontSize: 20),),
+              child: Text('Выйти', style: TextStyle(color: Colors.grey.withOpacity(0.7), fontSize: formSize),),
               onPressed: isOut ? null : _signOut,
             ),
           ),

@@ -22,10 +22,10 @@ class _RegPageState extends State<RegPage> {
   final _formKey = GlobalKey<FormState>();
 
   Future<void> _signUp() async {
-    final isValid = _formKey.currentState!.validate();
-    if (!isValid) {
-      return;
-    }
+    // final isValid = _formKey.currentState!.validate();
+    // if (!isValid) {
+    //   return;
+    // }
     final email = _email.text;
     final password = _password.text;
     final username = _username.text;
@@ -57,7 +57,7 @@ class _RegPageState extends State<RegPage> {
                       child: Text(
                         'Регистрация',
                         style: TextStyle(
-                            fontSize: 40,
+                            fontSize: formSize+12,
                             fontWeight: FontWeight.bold,
                             color: appTheme.primaryColor
                         ),
@@ -70,26 +70,26 @@ class _RegPageState extends State<RegPage> {
                   padding: formPadding,
                   child: ListView(
                       children: [
-                        FinanceTextField(controller: _username,hintText: 'Имя пользователя', fontSize: 20,),
+                        FinanceTextField(controller: _username,hintText: 'Имя пользователя', fontSize: formSize,),
                         formSpacer,
-                        FinanceTextField(controller: _email,hintText: 'Email', fontSize: 20,),
+                        FinanceTextField(controller: _email,hintText: 'Email', fontSize: formSize,),
                         formSpacer,
-                        FinanceTextField(controller: _password,hintText: 'Пароль', fontSize: 20,),
+                        FinanceTextField(controller: _password,hintText: 'Пароль', fontSize: formSize,),
                         formSpacer,
-                        FinanceTextField(controller: _repeatPassword, hintText: 'Повторите пароль', fontSize: 20),
+                        FinanceTextField(controller: _repeatPassword, hintText: 'Повторите пароль', fontSize: formSize),
                         formSpacer,
                         ElevatedButton(
                           onPressed: _isLoading ? null : _signUp,
-                          child: Text('Зарегистрироваться', style: TextStyle(fontSize: 22),),
+                          child: Text('Зарегистрироваться', style: TextStyle(fontSize: formSize + 2),),
                         ),
                         formSpacer,
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Уже есть аккаунт', style: TextStyle(fontSize: 20, color: Colors.grey),),
+                            Text('Уже есть аккаунт', style: TextStyle(fontSize: formSize, color: Colors.grey),),
                             TextButton(
                                 onPressed: () => context.go('/Auth'),
-                                child: Text('Войти', style: TextStyle(fontSize: 20),)
+                                child: Text('Войти', style: TextStyle(fontSize: formSize),)
                             )
                           ],
                         )

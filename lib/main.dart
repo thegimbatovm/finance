@@ -3,6 +3,7 @@ import 'package:finance/pages/Reg_page.dart';
 import 'package:finance/pages/auth_page.dart';
 import 'package:finance/pages/home_page.dart';
 import 'package:finance/pages/splash_page.dart';
+import 'package:finance/setting_pages/category_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -41,7 +42,15 @@ final GoRouter _router = GoRouter(
                 path: 'Home',
                 builder: (BuildContext context, GoRouterState state) {
                   return const HomePage();
-                }
+                },
+              routes: <RouteBase> [
+                GoRoute(
+                      path: 'Category',
+                      builder: (BuildContext context, GoRouterState state) {
+                        return const CategoryPage();
+                      },
+                    )
+                  ]
             ),
           ]
         ),
