@@ -1,7 +1,9 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:finance/constants.dart';
+import 'package:finance/navigation_pages/add_nav_page.dart';
+import 'package:finance/navigation_pages/info_nav_page.dart';
+import 'package:finance/navigation_pages/setting_nav_page.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,38 +14,33 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  bool _isOut = false;
-
-  Future<void> _signOut() async {
-    setState(() {
-      _isOut = true;
-    });
-    try {
-      await supabase.auth.signOut();
-      context.go('/Auth');
-    } on AuthException catch (error) {
-      context.showErrorSnackBar(message: error.message);
-    } catch (_) {
-      context.showErrorSnackBar(message: _.toString());
-    }
-    if (mounted) {
-      setState(() {
-        _isOut = true;
-      });
-    }
-  }
+  int _page = 0;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: appHomeTheme,
       home: Scaffold(
-        body: Center(
-          child: TextButton(
-            onPressed: _isOut ? null: _signOut,
-            child: Text('Выйти'),
-          ),
+        bottomNavigationBar: CurvedNavigationBar(
+          buttonBackgroundColor: appHomeTheme.primaryColor,
+          color: appHomeTheme.primaryColor,
+          backgroundColor: formColor,
+          items: <Widget>[
+            Icon(Icons.home, size: 30, color: formColor,),
+            Icon(Icons.add, size: 30, color: formColor,),
+            Icon(Icons.settings, size: 30, color: formColor,),
+          ],
+          onTap: (index){
+            setState(() {
+              _page = index;
+            });
+          },
         ),
+        body: <Widget>[
+          InfoNavPage(),
+          AddNavPage(),
+          SettingNavPage()
+        ][_page]
       ),
     );
   }
