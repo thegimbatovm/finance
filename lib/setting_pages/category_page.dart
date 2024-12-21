@@ -1,3 +1,5 @@
+import 'dart:collection';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:finance/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,17 +16,20 @@ class _CategoryPageState extends State<CategoryPage> {
 
   TextEditingController _newCategory = TextEditingController();
 
+  final List<Color> listColor = [Colors.red, Colors.blue, Colors.green, Colors.orange];
+  Color? selectedValue;
+
   void requestAgain() {
     setState(() {
       _future = Supabase.instance.client
           .from('category')
-          .select();
+          .select().eq('userid', user!.id);
     });
   }
 
   var _future = Supabase.instance.client
       .from('category')
-      .select();
+      .select().eq('userid', user!.id);
 
   @override
   Widget build(BuildContext context) {
@@ -35,29 +40,66 @@ class _CategoryPageState extends State<CategoryPage> {
         child: FloatingActionButton(
           onPressed: () => showDialog<String>(
             context: context,
-            builder: (BuildContext context) => AlertDialog(
-              actionsAlignment: MainAxisAlignment.center,
-              contentPadding: EdgeInsets.only(left: 20, right: 20, top: 40, bottom: 10),
-              content: FinanceTextField(controller: _newCategory,hintText: 'Новая категория', fontSize: formSize, ),
-              actions: [
-                      TextButton(
-                          onPressed: () async {
-                            await supabase
-                                .from('category')
-                                .insert({'name': _newCategory.text});
-                            context.pop();
-                            WidgetsBinding.instance.addPostFrameCallback((_){
-                              requestAgain();
-                            });
-                          },
-                          child: Text(
-                            'Добавить',
-                            style: TextStyle(
-                                fontSize: formSize + 2,
-                                fontWeight: FontWeight.bold),
-                          ))
-                    ],
-                  )),
+            builder: (BuildContext context) => StatefulBuilder(
+              builder: (context, StateSetter setState) {
+              return AlertDialog(
+                actionsAlignment: MainAxisAlignment.center,
+                contentPadding: EdgeInsets.only(left: 20, right: 20, top: 40, bottom: 10),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FinanceTextField(
+                            controller: _newCategory,
+                            hintText: 'Новая категория',
+                            fontSize: formSize,
+                          ),
+                          formSpacer,
+                          DropdownButton2<Color>(
+                            underline: Container(height: 1, color: Colors.black.withOpacity(0.7),),
+                            barrierColor: Colors.grey.withOpacity(0.5),
+                            hint: Text('Выберите цвет', style: TextStyle(color: Colors.grey, fontSize: formSize),),
+                            isExpanded: true,
+                            value: selectedValue,
+                            items: listColor.map((Color item) => DropdownMenuItem<Color>(
+                                value: item,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(color: item,),
+                                )
+                            ) ).toList(),
+                            onChanged: (Color? value) {
+                              setState(() {
+                                selectedValue = value;
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                actions: [
+                        TextButton(
+                            onPressed: () async {
+                              await supabase
+                                  .from('category')
+                                  .insert({
+                                'name': _newCategory.text,
+                                'userid': user!.id,
+                                'hexColor': selectedValue?.value.toInt()
+                                  });
+                              context.pop();
+                              WidgetsBinding.instance.addPostFrameCallback((_){
+                                requestAgain();
+                              });
+                            },
+                            child: Text(
+                              'Добавить',
+                              style: TextStyle(
+                                  fontSize: formSize + 2,
+                                  fontWeight: FontWeight.bold),
+                            ))
+                      ],
+                    );
+              }
+            )),
           backgroundColor: appHomeTheme.primaryColor,
           foregroundColor: formColor,
           child: Icon(Icons.add),
@@ -79,6 +121,17 @@ class _CategoryPageState extends State<CategoryPage> {
                 return Column(
                   children: [
                     ListTile(
+                      contentPadding: EdgeInsets.only(left: 2,right: 10, top: 2, bottom: 2),
+                      leading: Container(
+                        width: 10,
+                        decoration: BoxDecoration(
+                            color: Color(category['hexColor']),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(7),
+                                bottomLeft: Radius.circular(7)
+                            )
+                        ),
+                      ),
                       trailing: IconButton(
                         onPressed: () async {
                           await supabase
