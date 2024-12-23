@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -9,6 +10,13 @@ final username = metadata?['username'];
 
 const supabaseUrl = 'https://rcuffkdcapbqkhynffta.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjdWZma2RjYXBicWtoeW5mZnRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzMDY3OTIsImV4cCI6MjA0Nzg4Mjc5Mn0.BCIzTLQ_6Dvni1O18zZzGxDzAPB6C7R9YcZ0duk30OU';
+
+enum Operation{
+  debet,
+  kredet
+}
+
+DateTime now = DateTime.now();
 
 const preloader = Center(child: CircularProgressIndicator(color: Colors.orange,),);
 
@@ -124,6 +132,8 @@ int hexOfRGBA(int r,int g,int b,double opacity)
   int a = opacity.toInt();
   return int.parse('0x${a.toRadixString(16)}${r.toRadixString(16)}${g.toRadixString(16)}${b.toRadixString(16)}');
 }
+
+
 
 
 

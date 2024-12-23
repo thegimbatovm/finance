@@ -1,9 +1,11 @@
 import 'dart:collection';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:finance/constants.dart';
+import 'package:finance/supabase.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -19,17 +21,19 @@ class _CategoryPageState extends State<CategoryPage> {
   final List<Color> listColor = [Colors.red, Colors.blue, Colors.green, Colors.orange];
   Color? selectedValue;
 
+  int? _toogleDebetKredetState = 0;
+
   void requestAgain() {
     setState(() {
-      _future = Supabase.instance.client
+      _future = supabase
           .from('category')
-          .select().eq('userid', user!.id);
+          .select().eq('userid', user!.id).eq('debet', _toogleDebetKredetState == 0 ? true:false);
     });
   }
 
-  var _future = Supabase.instance.client
+  var _future = supabase
       .from('category')
-      .select().eq('userid', user!.id);
+      .select().eq('userid', user!.id).eq('debet', true);
 
   @override
   Widget build(BuildContext context) {
@@ -107,56 +111,87 @@ class _CategoryPageState extends State<CategoryPage> {
       ),
       body: Padding(
         padding: formPadding,
-        child: FutureBuilder(
-          future: _future,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            final categoryes = snapshot.data!;
-            return ListView.builder(
-              itemCount: categoryes.length,
-              itemBuilder: ((context, index) {
-                final category = categoryes[index];
-                return Column(
-                  children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.only(left: 2,right: 10, top: 2, bottom: 2),
-                      leading: Container(
-                        width: 10,
-                        decoration: BoxDecoration(
-                            color: Color(category['hexColor']),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(7),
-                                bottomLeft: Radius.circular(7)
-                            )
-                        ),
-                      ),
-                      trailing: IconButton(
-                        onPressed: () async {
-                          await supabase
-                              .from('category')
-                              .delete()
-                              .eq('id', category['id']);
-                          WidgetsBinding.instance.addPostFrameCallback((_){
-                            requestAgain();
-                          });
-                        },
-                        icon: Icon(Icons.delete, color: Colors.red.withOpacity(0.3),),
-                      ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: BorderSide(color: appHomeTheme.primaryColor)),
-                      title: Text(category['name'], style: TextStyle(fontSize: formSize),),
-                    ),
-                    formSpacer
-                  ],
-                );
-              }),
-            );
-          },
+        child: Column(
+          children: [
+            buildToggleSwitch,
+            formSpacer,
+            Expanded(
+              child: FutureBuilder(
+                future: _future,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  final categoryes = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: categoryes.length,
+                    itemBuilder: ((context, index) {
+                      final category = categoryes[index];
+                      return Column(
+                        children: [
+                          ListTile(
+                            contentPadding: EdgeInsets.only(left: 2,right: 10, top: 2, bottom: 2),
+                            leading: Container(
+                              width: 10,
+                              decoration: BoxDecoration(
+                                  color: Color(category['hexColor']),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(7),
+                                      bottomLeft: Radius.circular(7)
+                                  )
+                              ),
+                            ),
+                            trailing: IconButton(
+                              onPressed: () {
+                                deleteCategory(category['id']);
+                                WidgetsBinding.instance.addPostFrameCallback((_){
+                                  requestAgain();
+                                });
+                              },
+                              icon: Icon(Icons.delete, color: Colors.red.withOpacity(0.3),),
+                            ),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(color: appHomeTheme.primaryColor)),
+                            title: Text(category['name'], style: TextStyle(fontSize: formSize),),
+                          ),
+                          formSpacer
+                        ],
+                      );
+                    }),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  ToggleSwitch get buildToggleSwitch {
+    return ToggleSwitch(
+            borderColor: [appHomeTheme.primaryColor],
+            minWidth: double.infinity,
+            minHeight: 80,
+            cornerRadius: 20.0,
+            activeBgColors: [
+              [appHomeTheme.primaryColor],
+              [appHomeTheme.primaryColor]
+            ],
+            activeFgColor: Colors.white,
+            inactiveBgColor: formColor,
+            inactiveFgColor: Colors.black,
+            initialLabelIndex:
+            _toogleDebetKredetState,
+            totalSwitches: 2,
+            labels: ['Приход', 'Расход'],
+            radiusStyle: true,
+            onToggle: (index) {
+              setState(() {
+                _toogleDebetKredetState = index;
+              });
+            },
+          );
   }
 }
